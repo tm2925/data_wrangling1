@@ -59,7 +59,7 @@ litters_data
 ## other formats
 
 Read in mlb data
-```{r}
+```{r eval=FALSE}
 mlb_data = readxl::read_excel(path = ".data/mlb11.xlsx")
 
 ##subset of excel file
@@ -69,7 +69,7 @@ mlb_subset = readxl::read_excel(path = ".data/mlb11.xlsx",
 
 Read in pulse data:
 
-```{r}
+```{r eval=FALSE}
 pulse_data = haven::read_sas(".data/public_pulse_data.sas7bdat")
 view(pulse_data)
 ```
@@ -108,4 +108,38 @@ select(litters_data, group, litter_number, gest_day_0_weight = gd0_weight)
 
 rename(liters_data, gest_day_0_weight = gd0_weight)
 ```
+
+## filter observations 
+```{r}
+filter(litters_data, gd0_weight < 25)
+filter(litters_data, gd0_weight >= 25)
+
+filter(litters_data, pups_born_alive == 8)
+
+##removes observations with missing gd0_weight data
+filter(litters_data, !is.na(gd0_weight))
+
+##filters in groups 7 or 8
+filter(litters_data, group == "Low8" | group == "Low7")
+filter(litters_data, group %in% c("Low7", "Low8"))
+
+filter(litters_data, pups_born_alive %in% 4::6)
+
+filters(litters_data, pups_born_alive, %in% 4:7, }is.na(gd0_weight))
+```
+
+##mutate
+```{r}
+##create variables
+mutate(litters_data, 
+       wt_gain = gd18_weight - gd0_weight,
+       group = tolower(group)
+       )
+
+##create new variable, and then square variable immediately
+mutate(litters_data, 
+       wt_gain = gd18_weight - gd0_weight,
+       wt_gain_squared = wt_gain^2)
+```
+
 
